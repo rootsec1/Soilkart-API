@@ -30,6 +30,7 @@ exports.delete = (request, response)=>{
 };
 
 function sendResponse(err, data, request, response) {
+    console.log('['+request.method+'] '+request.url);
     if(err) {
         response.status(500).json({ err: err });
         console.log('[!STORE-ERR] '+err);
