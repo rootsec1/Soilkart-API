@@ -11,9 +11,13 @@ app.use(bodyParser.json());
 app.use(helmet());
 
 app.get('/', (request,response)=>{
+    console.log('['+request.method+'] '+request.url);
     response.status(200).json({ message: 'All API requests should be directed to /api/v1 endpoint.' });
 });
 
+require('./app/routes/store.routes')(app);
+require('./app/routes/product.routes')(app);
+require('./app/routes/order.routes')(app);
 app.listen(config.PORT, '0.0.0.0', ()=>{
     console.log('[SERVER] Listening on port '+config.PORT);
     mongoose.connect(config.DB_URI, { useNewUrlParser: true })
