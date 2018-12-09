@@ -20,6 +20,7 @@ require('./app/routes/product.routes')(app);
 require('./app/routes/order.routes')(app);
 app.listen(config.PORT, '0.0.0.0', ()=>{
     console.log('[SERVER] Listening on port '+config.PORT);
+    mongoose.set('useFindAndModify', false);
     mongoose.connect(config.DB_URI, { useNewUrlParser: true })
     .then(()=>console.log('[DB] Successfully hooked to Database.'))
     .catch(err=>{
