@@ -2,8 +2,9 @@ const Product = require('../models/product.model');
 
 exports.create = (request, response)=>{
     const product = new Product({
-        name: request.body.product,
+        name: request.body.name,
         price: request.body.price,
+        unit: request.body.unit,
         discount: request.body.discount,
         image: request.body.image
     });

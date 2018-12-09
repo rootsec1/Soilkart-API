@@ -5,4 +5,5 @@ module.exports = (app) => {
     app.post(EXT, OrderController.create);
     app.get(EXT, OrderController.getAll);
     app.get(EXT+'/:id', OrderController.get);
+    app.put(EXT+'/:id', OrderController.update);
 };
