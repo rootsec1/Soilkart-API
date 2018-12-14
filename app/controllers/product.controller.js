@@ -3,6 +3,7 @@ const Product = require('../models/product.model');
 exports.create = (request, response)=>{
     const product = new Product({
         name: request.body.name,
+        category: request.body.category,
         price: request.body.price,
         unit: request.body.unit,
         discount: request.body.discount,
@@ -12,7 +13,8 @@ exports.create = (request, response)=>{
 };
 
 exports.getAll = (request, response)=>{
-    Product.find({}, (err,data)=>sendResponse(err,data,request,response));
+    if(request.query.category) Product.find({ category: request.query.category }, (err,data)=>sendResponse(err,data,request,response));
+    else Product.find({}, (err,data)=>sendResponse(err,data,request,response));
 };
 
 exports.get = (request, response)=>{
