@@ -6,6 +6,7 @@ const productSchema = mongoose.Schema(
         category: { type: String, required: true, enum: ['vegetables','fruits','grains'] },
         price: { type: Number, required: true },
         unit: { type: String, required: true },
+        quantity: { type: Number, required: false, default: 0 },
         discount: { type: Number, required: false, default: 0 },
         image: { type: String, required: false, default: '' }
     },
