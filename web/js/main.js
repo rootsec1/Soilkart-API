@@ -63,5 +63,11 @@
         $(thisAlert).removeClass('alert-validate');
     }
     
+    $('#signin_button').click(()=>{
+        var email = $('#email_address').val();
+        var password = $('#password').val();
+
+        console.log(email, password);
+    });
     
 })(jQuery);
