@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const Product = require('./product.model');
 
 const orderSchema = mongoose.Schema(
     {
         store: { type: String, required: true },
-        products: { type: [String], required: true, default: [] },
+        products: { type: [Product.schema], required: true, default: [] },
         status: { type: String, enum: [ 'WAIT', 'PICKEDUP', 'DELIVERED' ], default: 'WAIT' }
     },
     {
