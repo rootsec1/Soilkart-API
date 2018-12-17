@@ -8,10 +8,11 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(helmet());
+app.use(express.static(__dirname+'/web'));
 
 app.get('/', (request,response)=>{
     console.log('['+request.method+'] '+request.url);
-    response.status(200).json({ message: 'All API requests should be directed to /api/v1 endpoint.' });
+    response.sendFile(__dirname+'/web/index.html');
 });
 
 require('./app/routes/store.routes')(app);
