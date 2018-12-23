@@ -2,8 +2,14 @@ const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const firebaseAdmin = require('firebase-admin');
 //LOCAL
 const config = require('./config');
+const serviceAccount = require('./config/sak.json');
+firebaseAdmin.initializeApp({
+    credential: firebaseAdmin.credential.cert(serviceAccount),
+    databaseURL: "https://soilkart-3d137.firebaseio.com"
+});
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
