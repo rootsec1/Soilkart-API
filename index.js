@@ -6,10 +6,6 @@ const firebaseAdmin = require('firebase-admin');
 //LOCAL
 const config = require('./config');
 const serviceAccount = require('./config/sak.json');
-firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert(serviceAccount),
-    databaseURL: "https://soilkart-3d137.firebaseio.com"
-});
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -27,6 +23,10 @@ require('./app/routes/delivery_person.routes')(app);
 require('./app/routes/order.routes')(app);
 app.listen(config.PORT, '0.0.0.0', ()=>{
     console.log('[SERVER] Listening on port '+config.PORT);
+    firebaseAdmin.initializeApp({
+        credential: firebaseAdmin.credential.cert(serviceAccount),
+        databaseURL: "https://soilkart-3d137.firebaseio.com"
+    });
     mongoose.set('useFindAndModify', false);
     mongoose.connect(config.DB_URI, { useNewUrlParser: true })
     .then(()=>console.log('[DB] Successfully hooked to Database.'))

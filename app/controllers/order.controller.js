@@ -1,11 +1,16 @@
 const Order = require('../models/order.model');
+const firebaseAdmin = require('firebase-admin');
+const firebaseDatabase = firebaseAdmin.database();
 
 exports.create = (request, response)=>{
     const order = new Order({
         store: request.body.store,
         products: request.body.products
     });
-    order.save((err,data)=>sendResponse(err,data,request,response));
+    order.save((err,data)=>{
+        firebaseDatabase.ref("orders").child(request.data._id).set(data);
+        sendResponse(err,data,request,response);
+    });
 };
 
 exports.getAll = (request, response)=>{
@@ -19,7 +24,10 @@ exports.get = (request, response)=>{
 };
 
 exports.update = (request, response)=>{
-    Order.findByIdAndUpdate(request.params.id, { $set: request.body }, { new: true, runValidators: true }, (err,data)=>sendResponse(err,data,request,response));
+    Order.findByIdAndUpdate(request.params.id, { $set: request.body }, { new: true, runValidators: true }, (err,data)=>{
+        firebaseDatabase.ref("orders").child(request.params.id).set(data);
+        sendResponse(err,data,request,response);
+    });
 };
 
 function sendResponse(err, data, request, response) {
