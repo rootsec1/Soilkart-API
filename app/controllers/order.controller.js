@@ -1,6 +1,4 @@
 const Order = require('../models/order.model');
-const firebaseAdmin = require('firebase-admin');
-const firebaseDatabase = firebaseAdmin.database();
 
 exports.create = (request, response)=>{
     const order = new Order({
@@ -8,7 +6,6 @@ exports.create = (request, response)=>{
         products: request.body.products
     });
     order.save((err,data)=>{
-        firebaseDatabase.ref("orders").child(request.data._id).set(data);
         sendResponse(err,data,request,response);
     });
 };

@@ -1,4 +1,7 @@
 const Store = require('../models/store.model');
+Store.watch().on('change', data=>{
+    console.log('[REALTIME DB]: '+JSON.stringify(data));
+});
 
 exports.create = (request, response)=>{
     const store = new Store({
