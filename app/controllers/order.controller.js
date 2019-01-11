@@ -1,4 +1,6 @@
 const Order = require('../models/order.model');
+const Store = require('../models/store.model');
+const firebaseAdmin = require('firebase-admin');
 
 exports.create = (request, response)=>{
     const order = new Order({
@@ -6,7 +8,20 @@ exports.create = (request, response)=>{
         products: request.body.products
     });
     order.save((err,data)=>{
-        sendResponse(err,data,request,response);
+        if(err) sendResponse(err,null,request,response);
+        else {
+            //Broadcasting new order to delivery guy's devices
+            const message = {
+                "data": { "event": "NEW" },
+                "topic": "ORDERS"
+            };
+            firebaseAdmin.messaging().send(message, true)       //TODO: Remove true to remove dry run
+            .then(fcmResponse => {
+                sendResponse(err,data,request,response);
+                console.log('[FCM] Successfully sent message: '+fcmResponse);
+            })
+            .catch(err => console.log('[FCM] Error sending message: '+err));
+        }
     });
 };
 
@@ -22,8 +37,26 @@ exports.get = (request, response)=>{
 
 exports.update = (request, response)=>{
     Order.findByIdAndUpdate(request.params.id, { $set: request.body }, { new: true, runValidators: true }, (err,data)=>{
-        firebaseDatabase.ref("orders").child(request.params.id).set(data);
-        sendResponse(err,data,request,response);
+        if(err) sendResponse(err,null,request,response);
+        else {
+            //Sending only to individual device using FCM token
+            Store.findById(data.store, (errStore, dataStore)=>{
+                if(errStore) sendResponse(errStore, null, request, response);
+                else {
+                    const fcmToken = dataStore.fcm_token;
+                    const message = {
+                        "data": { "event": "UPDATED" },
+                        "token": fcmToken
+                    };
+                    firebaseAdmin.messaging().send(message, true)       //Remove true to remove dry run
+                    .then(fcmResponse => {
+                        sendResponse(err,data,request,response);
+                        console.log('[FCM] Successfully sent message: '+fcmResponse);
+                    })
+                    .catch(err => console.log('[FCM] Error sending message: '+err));
+                }
+            });
+        }
     });
 };
 

@@ -38,8 +38,6 @@ app.listen(config.PORT, '0.0.0.0', ()=>{
             credential: firebaseAdmin.credential.cert(serviceAccount),
             databaseURL: "https://soilkart-3d137.firebaseio.com"
         });        
-        require('./app/models/store.model').watch().on('change',data=>io.emit('STORES', data));
-        require('./app/models/order.model').watch().on('change',data=>io.emit('ORDERS', data));
     })
     .catch(err=>{
         console.log('[!DB-ERR] '+err);
